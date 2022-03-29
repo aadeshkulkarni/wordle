@@ -19,6 +19,10 @@ function App() {
     }
   }
 
+  const onBackspace=()=>{
+    setCurrentWord(currentWord.slice(0, -1));
+  }
+
   const onAlphabetClick = (character) => {
     let newWord = currentWord + character;
     setCurrentWord(newWord);
@@ -68,7 +72,7 @@ function App() {
           <div className="box">{userWords[4] && userWords[4].charAt(4)}</div>
         </div>
       </div>
-      <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} />
+      <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} />
     </div>
   );
 }
