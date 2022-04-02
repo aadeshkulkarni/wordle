@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Footer({ onAlphabetClick, onEnter, onBackspace }) {
-    return <footer style={{ position: "absolute", bottom: "2rem", width: "100%" }}>
+    return <footer style={{  width: "100%" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr", gap: "1rem" }}>
                 <div className="alphabet" onClick={() => { onAlphabetClick('Q') }}>Q</div>
