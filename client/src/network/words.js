@@ -1,4 +1,5 @@
 const axios = require('axios')
+const APIEndpoint = process.env.REACT_APP_API_ENDPOINT;
 
 export async function checkWordInDictionary(word) {
    try {
@@ -17,6 +18,7 @@ export async function checkWordInDictionary(word) {
 
 
 export async function wordOfTheDay() {
-   const response = await axios.get('http://localhost:4000')
+   console.log("API: ",APIEndpoint);
+   const response = await axios.get(`${APIEndpoint}/api/word`)
    return response.data.words;
 }

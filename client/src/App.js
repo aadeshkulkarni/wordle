@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Footer from './Footer';
 import Header from './Header';
+import Help from './Help';
 import { checkWordInDictionary, wordOfTheDay } from "./network/words"
 const CryptoAES = require('crypto-js/aes')
 const CryptoENC = require('crypto-js/enc-utf8')
 
 
 function App() {
-
+  const [showHelp, setHelpStatus] = useState(false)
   const [gameStatus, setGameStatus] = useState("")
   const [word, setWord] = useState()
   const [userWords, setUserWords] = useState([
@@ -119,7 +120,8 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%" }}>
-      <Header />
+      {showHelp ? <Help setHelpStatus={setHelpStatus}/> :(<>
+      <Header setHelpStatus={setHelpStatus}/>
       <div className="status">
         <h1 style={{ textAlign: "center" }}>{gameStatus}</h1>
       </div>
@@ -129,6 +131,7 @@ function App() {
         </div>
       </div>
       <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} getColorForAlphabet={getColorForAlphabet} />
+      </>)}
     </div>
   );
 }
