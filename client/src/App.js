@@ -50,8 +50,8 @@ function App() {
         setRow(row => row + 1)
         if (currentWord === word) {
           setGameStatus("Genius!")
-          setCurrentWord("")
         }
+        setCurrentWord("")
       }
       else {
         await setGameStatus("Word not found")
@@ -59,7 +59,7 @@ function App() {
           setGameStatus("")
         }, 4000)
       }
-      setCurrentWord("")
+      
     }
   }
 
@@ -104,8 +104,8 @@ function App() {
 
   const getColorForAlphabet = (alphabet) => {
 
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 5 && j < (row - 1); j++) {
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < 5; j++) {
         let character = userWords[i][j];
         if (character === alphabet && word.indexOf(alphabet) === j) {
           return 'exact-match'
@@ -123,6 +123,7 @@ function App() {
       {showHelp ? <Help setHelpStatus={setHelpStatus}/> :(<>
       <Header setHelpStatus={setHelpStatus}/>
       <div className="status">
+        <h1>{word}</h1>
         <h1 style={{ textAlign: "center" }}>{gameStatus}</h1>
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
