@@ -16,13 +16,16 @@ header {
   color: #F0F0F0;
   background:#000;
   border-radius:0.15rem;
-  cursor:pointer;
   text-align:center;
   display:flex;
   justify-content: center;
   align-items: center;
   font-size: 1.4rem;
   font-weight:600;
+}
+.alphabet-box{
+  gap: 1rem;
+  margin: 1rem;
 }
 .alphabet {
   border: 2px solid #AAA;
@@ -39,13 +42,56 @@ header {
 }
 
 .exact-match{
-  border-color: green;
+  background: #4cc794 !important;
+  border: 2px solid #4cc794;
+  color:#FFF;
 }
 
 .partial-match{
-  border-color: yellow;
+  background: #c9b458 !important;
+  border: 2px solid #c9b458;
+  color:#FFF;
 }
 
 .no-match {
-  border-color: gray;
+  background: #515956 !important;
+  border: 2px solid #515956;
+  color:#FFF;
+}
+
+.footer-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+  footer{
+    width:100%;
+  }
+  .alphabet {
+    min-width: 32px;
+    min-height: 58px;
+    margin: 0.125rem;
+    display:flex;
+    justify-content: center;
+  }
+  .alphabet-box{
+    grid-gap: 0;
+  }
+  .footer-container{
+    padding: 0rem;
+  }
+  .box {
+    border: 1px solid #111;
+    padding: 0.125rem;
+    min-width: 62px;
+    min-height: 62px;
+  }
+}
+
+.status{
+  min-height:100px;
 }
