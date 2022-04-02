@@ -19,6 +19,6 @@ export async function checkWordInDictionary(word) {
 
 export async function wordOfTheDay() {
    console.log("API: ",APIEndpoint);
-   const response = await axios.get(`${APIEndpoint}/api/word`)
+   const response = await axios.get(`/api/word`)
    return response.data.words;
 }
