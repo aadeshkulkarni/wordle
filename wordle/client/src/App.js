@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Footer from './Footer';
 import Header from './Header';
-import axios from 'axios';
 import { checkWordInDictionary, wordOfTheDay } from "./network/words"
+const CryptoAES = require('crypto-js/aes')
+const CryptoENC = require('crypto-js/enc-utf8')
+
 
 function App() {
 
@@ -20,14 +22,17 @@ function App() {
   const [column, setColumn] = useState(0)
   const [currentWord, setCurrentWord] = useState("")
 
-
   useEffect(() => {
     async function fetchWordOfTheDay() {
       const response = await wordOfTheDay()
-      setWord(response);
+      setWord(CryptoAES.decrypt(response, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC));
     }
     fetchWordOfTheDay()
   }, [])
+
+  useEffect(() => {
+    setColumn(currentWord.length)
+  },[currentWord])
 
   const onEnter = async () => {
     if (currentWord.length === 5) {
@@ -35,7 +40,6 @@ function App() {
       //failure sucess scenarios
       if (response) {
         setRow(row => row + 1)
-        setColumn(0)
         if(currentWord === word){
           alert("You have guessed the word")
         }
@@ -55,7 +59,6 @@ function App() {
       let wordsClone = [...userWords]
       wordsClone[row][column - 1] = ''
       setUserWords(wordsClone)
-      setColumn(column => column - 1)
       setCurrentWord(word)
     } 
   }
@@ -67,7 +70,6 @@ function App() {
       let wordsClone = [...userWords]
       wordsClone[row][column] = character
       setUserWords(wordsClone)
-      setColumn(column => column + 1)
     }
   }
 
@@ -75,6 +77,7 @@ function App() {
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%" }}>
       <Header />
       <div>
+      <h1 style={{ textAlign: "center" }}>{currentWord}</h1>
         <h1 style={{ textAlign: "center" }}>{gameStatus}</h1>
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>

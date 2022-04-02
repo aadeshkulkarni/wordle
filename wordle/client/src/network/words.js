@@ -18,5 +18,5 @@ export async function checkWordInDictionary(word) {
 
 export async function wordOfTheDay() {
    const response = await axios.get('http://localhost:4000')
-   return response.data.words.wordOfTheDay;
+   return response.data.words;
 }
