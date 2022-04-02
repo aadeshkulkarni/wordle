@@ -1,18 +1,21 @@
+body{
+  background: rgb(13,41,62);
+  background: linear-gradient(45deg, rgba(13,41,62,1) 12%, rgba(4,38,73,1) 44%, rgba(2,1,8,1) 100%);
+  color:#FFF;
+}
 header {
   width: 100%;
-}
-h1 {
-  text-align: center;
+  padding-left:2rem;
 }
 
 .box {
-  border: 1px solid #DDD;
+  border: 1px solid #111;
   padding: 1rem;
   min-width: 75px;
   min-height: 75px;
-  background: #F0F0F0;
+  color: #F0F0F0;
+  background:#000;
   border-radius:0.15rem;
-  cursor:pointer;
   text-align:center;
   display:flex;
   justify-content: center;
@@ -20,13 +23,75 @@ h1 {
   font-size: 1.4rem;
   font-weight:600;
 }
+.alphabet-box{
+  gap: 1rem;
+  margin: 1rem;
+}
 .alphabet {
-  border: 1px solid #CCC;
+  border: 2px solid #AAA;
   padding: 1rem;
   min-width: 30px;
   min-height: 50px;
   border-radius:0.25rem;
-  background:#EEE;
+  color:#CCC;
+  background: rgb(13,41,62);
+  background: linear-gradient(45deg, rgba(13,41,62,1) 12%, rgba(4,38,73,1) 44%, rgba(2,1,8,1) 100%);
   cursor:pointer;
   text-align: center;
+  font-weight:600;
+}
+
+.exact-match{
+  background: #4cc794 !important;
+  border: 2px solid #4cc794;
+  color:#FFF;
+}
+
+.partial-match{
+  background: #c9b458 !important;
+  border: 2px solid #c9b458;
+  color:#FFF;
+}
+
+.no-match {
+  background: #515956 !important;
+  border: 2px solid #515956;
+  color:#FFF;
+}
+
+.footer-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+  footer{
+    width:100%;
+  }
+  .alphabet {
+    min-width: 32px;
+    min-height: 58px;
+    margin: 0.125rem;
+    display:flex;
+    justify-content: center;
+  }
+  .alphabet-box{
+    grid-gap: 0;
+  }
+  .footer-container{
+    padding: 0rem;
+  }
+  .box {
+    border: 1px solid #111;
+    padding: 0.125rem;
+    min-width: 62px;
+    min-height: 62px;
+  }
+}
+
+.status{
+  min-height:100px;
 }

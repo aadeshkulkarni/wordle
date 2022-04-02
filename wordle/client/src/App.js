@@ -12,12 +12,12 @@ function App() {
   const [gameStatus, setGameStatus] = useState("")
   const [word, setWord] = useState()
   const [userWords, setUserWords] = useState([
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', ''],
-  ['', '', '', '', '']
-])
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', '']
+  ])
   const [row, setRow] = useState(0)
   const [column, setColumn] = useState(0)
   const [currentWord, setCurrentWord] = useState("")
@@ -25,14 +25,21 @@ function App() {
   useEffect(() => {
     async function fetchWordOfTheDay() {
       const response = await wordOfTheDay()
-      setWord(CryptoAES.decrypt(response, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC));
+      const word = CryptoAES.decrypt(response, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC);
+      setWord(word.toUpperCase());
     }
     fetchWordOfTheDay()
   }, [])
 
   useEffect(() => {
     setColumn(currentWord.length)
-  },[currentWord])
+  }, [currentWord])
+
+  useEffect(() => {
+    if ((row === 5) && (currentWord.toUpperCase() !== word.toUpperCase())) {
+      setGameStatus(word)
+    }
+  }, [row])
 
   const onEnter = async () => {
     if (currentWord.length === 5) {
@@ -40,12 +47,16 @@ function App() {
       //failure sucess scenarios
       if (response) {
         setRow(row => row + 1)
-        if(currentWord === word){
-          alert("You have guessed the word")
+        if (currentWord === word) {
+          setGameStatus("Genius!")
+          setCurrentWord("")
         }
       }
       else {
-        alert("Word not found")
+        await setGameStatus("Word not found")
+        setTimeout(() => {
+          setGameStatus("")
+        }, 4000)
       }
       setCurrentWord("")
     }
@@ -54,13 +65,13 @@ function App() {
 
   //optimize common function
   const onBackspace = () => {
-    let word  = currentWord.slice(0, -1);
-    if(word.length >= 0){
+    let word = currentWord.slice(0, -1);
+    if (word.length >= 0) {
       let wordsClone = [...userWords]
       wordsClone[row][column - 1] = ''
       setUserWords(wordsClone)
       setCurrentWord(word)
-    } 
+    }
   }
 
   const onAlphabetClick = (character) => {
@@ -73,19 +84,51 @@ function App() {
     }
   }
 
+  const getClassForBox = (boxCharacter, rowIndex, colIndex, currentRow, currentWord) => {
+    let className;
+    if (rowIndex < currentRow && currentWord) {
+
+      if (boxCharacter.toUpperCase() === word?.charAt(colIndex).toUpperCase()) {
+        className = 'exact-match'
+      }
+      else if (word.indexOf(boxCharacter) != -1) {
+        className = "partial-match"
+      }
+      else {
+        className = 'no-match'
+      }
+    }
+    return className;
+  }
+
+  const getColorForAlphabet = (alphabet) => {
+
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 5 && j < (row - 1); j++) {
+        let character = userWords[i][j];
+        if (character === alphabet && word.indexOf(alphabet) === j) {
+          return 'exact-match'
+        }
+        else if (character === alphabet) {
+          return 'partial-match'
+        }
+      }
+    }
+    return ''
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%" }}>
       <Header />
-      <div>
-      <h1 style={{ textAlign: "center" }}>{currentWord}</h1>
+      <div className="status">
         <h1 style={{ textAlign: "center" }}>{gameStatus}</h1>
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
         <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
-          {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className="box">{userWords[rowIndex][columnIndex]}</div>))}
+          {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className={`box ${getClassForBox(userWords[rowIndex][columnIndex], rowIndex, columnIndex, row, word)}`}>{userWords[rowIndex][columnIndex]}</div>))}
         </div>
       </div>
-      <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} />
+      <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} getColorForAlphabet={getColorForAlphabet} />
     </div>
   );
 }
