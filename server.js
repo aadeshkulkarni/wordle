@@ -6,7 +6,9 @@ const CryptoAES = require('crypto-js/aes')
 const wordsList = require('./wordList');
 const path = require('path')
 const filePath = './config.json'
-const port=process.env.port || 4000
+
+const port=process.env.PORT || 4000
+const host=process.env.HOST || '0.0.0.0'
 const app = express();
 app.use(cors())
 dotenv.config();
@@ -68,8 +70,8 @@ if(process.env.NODE_ENV==='production'){
    })
 }
 
-app.listen(port, () => {
-   console.log(`SERVER STARTED AT PORT ${port}`)
+app.listen(port,host, () => {
+   console.log(`SERVER STARTED AT ${host}:${port}`)
 });
 
 process.on('unhandledRejection', err => {
