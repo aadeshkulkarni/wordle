@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Footer({ onAlphabetClick, onEnter, onBackspace }) {
-    return <footer style={{  width: "100%" }}>
+    return <footer style={{  width: "100%", paddingBottom:"3rem" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "1rem" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr", gap: "1rem" }}>
                 <div className="alphabet" onClick={() => { onAlphabetClick('Q') }}>Q</div>
@@ -27,8 +27,7 @@ function Footer({ onAlphabetClick, onEnter, onBackspace }) {
                 <div className="alphabet" onClick={() => { onAlphabetClick('L') }}>L</div>
             </div>
             <hr />
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr", gap: "1rem" }}>
-                <div className="alphabet" onClick={onEnter}>Enter</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr 2fr", gap: "1rem" }}>
                 <div className="alphabet" onClick={() => { onAlphabetClick('Z') }}>Z</div>
                 <div className="alphabet" onClick={() => { onAlphabetClick('X') }}>X</div>
                 <div className="alphabet" onClick={() => { onAlphabetClick('C') }}>C</div>
@@ -37,6 +36,7 @@ function Footer({ onAlphabetClick, onEnter, onBackspace }) {
                 <div className="alphabet" onClick={() => { onAlphabetClick('N') }}>N</div>
                 <div className="alphabet" onClick={() => { onAlphabetClick('M') }}>M</div>
                 <div className="alphabet" onClick={() => { onBackspace() }}>Backspace</div>
+                <div className="alphabet" onClick={onEnter}>Enter</div>
             </div>
         </div>
     </footer>

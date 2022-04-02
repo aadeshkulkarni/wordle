@@ -1,16 +1,20 @@
+body{
+  background: rgb(13,41,62);
+  background: linear-gradient(45deg, rgba(13,41,62,1) 12%, rgba(4,38,73,1) 44%, rgba(2,1,8,1) 100%);
+  color:#FFF;
+}
 header {
   width: 100%;
-}
-h1 {
-  text-align: center;
+  padding-left:2rem;
 }
 
 .box {
-  border: 1px solid #DDD;
+  border: 1px solid #111;
   padding: 1rem;
   min-width: 75px;
   min-height: 75px;
-  background: #F0F0F0;
+  color: #F0F0F0;
+  background:#000;
   border-radius:0.15rem;
   cursor:pointer;
   text-align:center;
@@ -21,12 +25,27 @@ h1 {
   font-weight:600;
 }
 .alphabet {
-  border: 1px solid #CCC;
+  border: 2px solid #AAA;
   padding: 1rem;
   min-width: 30px;
   min-height: 50px;
   border-radius:0.25rem;
-  background:#EEE;
+  color:#CCC;
+  background: rgb(13,41,62);
+  background: linear-gradient(45deg, rgba(13,41,62,1) 12%, rgba(4,38,73,1) 44%, rgba(2,1,8,1) 100%);
   cursor:pointer;
   text-align: center;
+  font-weight:600;
+}
+
+.exact-match{
+  border-color: green;
+}
+
+.partial-match{
+  border-color: yellow;
+}
+
+.no-match {
+  border-color: gray;
 }
