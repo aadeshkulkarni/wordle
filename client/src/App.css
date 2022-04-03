@@ -101,6 +101,7 @@ header {
 
 .no-match-outline {
   border: 2px solid #515956;
+  background: #515956 !important;
   color: #fff;
 }
 
@@ -206,4 +207,8 @@ header img:hover,
 header img:active,
 header img:focus{
   opacity: 0.8;
+}
+
+a, button, div { 
+  -ms-touch-action: manipulation; /* IE10 / touch-action: manipulation; / IE11+ */ 
 }
