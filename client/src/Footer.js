@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Footer({ onAlphabetClick, onEnter, onBackspace,getColorForAlphabet }) {
-    return <footer style={{ paddingBottom:"3rem" }}>
+    return <footer>
         <div style={{ }}>
             <div className="alphabet-box" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"}}>
                 <div className={`alphabet ${getColorForAlphabet('Q')}`} onClick={() => { onAlphabetClick('Q') }}>Q</div>
@@ -34,8 +34,8 @@ function Footer({ onAlphabetClick, onEnter, onBackspace,getColorForAlphabet }) {
                 <div className={`alphabet ${getColorForAlphabet('B')}`} onClick={() => { onAlphabetClick('B') }}>B</div>
                 <div className={`alphabet ${getColorForAlphabet('N')}`} onClick={() => { onAlphabetClick('N') }}>N</div>
                 <div className={`alphabet ${getColorForAlphabet('M')}`} onClick={() => { onAlphabetClick('M') }}>M</div>
-                <div className={`alphabet`} onClick={() => { onBackspace() }}>Bk</div>
-                <div className="alphabet" onClick={onEnter}>Enter</div>
+                <div className="alphabet" onClick={() => { onBackspace() }}><img src="backspace.svg" style={{ width: "24px", height: "24px" }}/></div>
+                <div className="alphabet" onClick={onEnter}><img src="enter.svg" style={{ width: "24px", height: "24px" }}/></div>
             </div>
         </div>
     </footer>
