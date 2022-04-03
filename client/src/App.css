@@ -104,10 +104,26 @@ footer{
     min-width: 62px;
     min-height: 62px;
   }
+  h1{
+    padding:0;
+    margin:0.5rem;
+  }
+  .app-title{
+    padding: 0.5rem;
+  }
+  .status{
+    min-height:75px;
+  }
 }
-
+.app-title{
+  padding: 1rem;
+  letter-spacing: 2px
+}
 .status{
   min-height:100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .stat-container{
   display: flex;
