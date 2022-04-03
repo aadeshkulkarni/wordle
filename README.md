@@ -1,6 +1,6 @@
 # Things to do
 
--[x] Color Logic:
+-- [x] Color Logic:
     1. If character does not exist in the hidden word, then background-color: Gray
     2. If character exists in the hidden word but not at the right index, then background-color: Yellow
     3. If character exists in the hidden word and at the right index, then background-color: Green
