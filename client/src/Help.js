@@ -8,7 +8,7 @@ const Help = ({ setHelpStatus }) => {
         <div style={{ display: 'relative', maxWidth: "600px", padding: "0.5rem",paddingBottom:"1rem" }}>
             <div className="header" onClick={() => setHelpStatus(false)}><img src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
             <h1 style={{textAlign:"center"}}>HOW TO PLAY</h1>
-            <p>Guess the <strong>WORDLE</strong> in six tries.
+            <p>Guess the <strong>WORDLE</strong> in five tries.
             </p>
             <p>Each guess must be a valid five-letter word. Hit the enter button to submit.
             </p>
