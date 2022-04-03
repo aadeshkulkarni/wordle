@@ -144,7 +144,7 @@ function App() {
     if (!gameOver) {
       if ("vibrate" in navigator) {
         // vibration API supported
-        navigator.vibrate(1000);
+        navigator.vibrate(50);
       }
       let newWord = currentWord + character;
       if (newWord.length <= 5) {
