@@ -44,19 +44,19 @@ header {
 }
 
 .exact-match{
-  /* background: #4cc794 !important; */
+  background: #4cc794 !important;
   border: 2px solid #4cc794;
   color:#FFF;
 }
 
 .partial-match{
-  /* background: #c9b458 !important; */
+  background: #c9b458 !important;
   border: 2px solid #c9b458;
   color:#FFF;
 }
 
 .no-match {
-  /* background: #515956 !important; */
+  background: #515956 !important;
   border: 2px solid #515956;
   color:#FFF;
 }
