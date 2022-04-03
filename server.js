@@ -18,34 +18,41 @@ if (fs.existsSync(filePath)) {
    fileContents = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
 }
 
-const fetchTodaysWord = async () => {
-   const word = fetchRandomWords();
+const fetchTodaysWord = async (category) => {
+   const word = fetchRandomWords(category);
    const today = new Date().toLocaleDateString();
-   if (fileContents?.date !== today || fileContents?.wordOfTheDay !== '' || true) {
-      fs.writeFileSync(filePath, `{
-      "date": "${new Date().toLocaleDateString()}",
-      "wordOfTheDay": "${word}"
-   }`)
+   if (fileContents[category]?.date !== today || fileContents[category]?.wordOfTheDay === '') {
+      let obj = {};
+      obj[category] = {
+         "date": `${new Date().toLocaleDateString()}`,
+         "wordOfTheDay": `${word}`
+      }
+      let data = JSON.stringify({
+         ...fileContents, ...obj
+      })
+      fs.writeFileSync(filePath, data);
    }
    return word;
 }
 
-const fetchRandomWords = () => {
-   const list = wordsList.filter(word => word.length === 5);
+const fetchRandomWords = (category) => {
+   const list = wordsList[0][category].filter(word => word.length === 5);
    const word = list[Math.floor(Math.random() * list.length)]
    return CryptoAES.encrypt(word, process.env.ENCRYPT_KEY).toString()
 }
 
-app.get('/api/word', async (req, res) => {
+app.get('/api/word/:category', async (req, res) => {
+   const categorySelected = req.params.category;
    const today = new Date().toLocaleDateString();
-   if (fileContents?.date === today && fileContents?.wordOfTheDay !== '') {
+   if (fileContents[categorySelected]?.date === today && fileContents[categorySelected]?.wordOfTheDay !== '') {
+      
       res.status(200).send({
-         words: fileContents.wordOfTheDay,
+         words: fileContents[categorySelected].wordOfTheDay,
          status: 'success'
       })
    }
    else {
-      let word = await fetchTodaysWord()
+      let word = await fetchTodaysWord(categorySelected)
       if (word) {
          res.status(200).send({
             words: word,
@@ -58,6 +65,24 @@ app.get('/api/word', async (req, res) => {
             status: 'error'
          })
       }
+   }
+})
+
+
+app.get('/api/categories', async (req, res) => {
+   try {
+      const categories = Object.keys(wordsList[0]);
+
+      res.status(200).send({
+         categories: categories,
+         status: 'success'
+      })
+   }
+   catch {
+      res.status(500).send({
+         error: 'Something Went Wrong!',
+         status: 'error'
+      })
    }
 })
 

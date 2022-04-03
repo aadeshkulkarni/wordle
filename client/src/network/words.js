@@ -16,9 +16,13 @@ export async function checkWordInDictionary(word) {
 //    // return response.data[0]?.word
 // }
 
+export async function fetchAllCategories() {
+   const response = await axios.get('/api/categories')
+   return response.data.categories
+}
 
-export async function wordOfTheDay() {
-   const response = await axios.get(`/api/word`)
+export async function wordOfTheDay(category) {
+   const response = await axios.get(`/api/word/${category}`)
    return response.data.words;
 }
 

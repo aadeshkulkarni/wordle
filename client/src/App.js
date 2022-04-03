@@ -3,6 +3,7 @@ import './App.css';
 import Footer from './Footer';
 import Header from './Header';
 import Help from './Help';
+import Category from './Category';
 import { checkWordInDictionary, wordOfTheDay, hitCount } from "./network/words"
 import Statistics from './Statistics';
 const CryptoAES = require('crypto-js/aes')
@@ -10,13 +11,14 @@ const CryptoENC = require('crypto-js/enc-utf8')
 
 
 function App() {
-  const [loader,setLoader]=useState(false)
+  const [loader, setLoader] = useState(false)
   const LSData = getLocalStorage(new Date().toLocaleDateString())
+  const [category, setCategory] = useState(LSData?.category ? LSData?.category : '')
   const [showHelp, setHelpStatus] = useState(LSData?.showHelp ? LSData?.showHelp : false)
   const [stats, setStats] = useState(LSData?.stats || {})
   const [statStatus, setStatStatus] = useState(LSData?.statStatus ? LSData?.statStatus : false)
   const [gameStatus, setGameStatus] = useState(LSData?.gameStatus || "")
-  const [gameOver, setGameOver] = useState(LSData?.showHelp ? LSData?.showHelp : false)
+  const [gameOver, setGameOver] = useState(LSData?.gameOver ? LSData?.gameOver : false)
   const [word, setWord] = useState(LSData?.word || '')
   const [userWords, setUserWords] = useState(LSData?.userWords || [
     ['', '', '', '', ''],
@@ -26,25 +28,37 @@ function App() {
     ['', '', '', '', '']
   ])
   const [row, setRow] = useState(LSData?.row ? LSData?.row : 0)
-  const [column, setColumn] = useState(LSData?.column ? LSData?.column : 0)
-  const [currentWord, setCurrentWord] = useState(LSData?.currentWord || "")
+  const [column, setColumn] = useState()
+  const [currentWord, setCurrentWord] = useState("")
+
+  const onCategorySelectHandler = (e) => {
+    setCategory(e.target.dataset.categoryName)
+  }
 
   useEffect(() => {
-    if(!localStorage.getItem('played')){
+    if (!localStorage.getItem('played')) {
       setHelpStatus(true)
     }
     setStatistics(0, 0);
     async function fetchWordOfTheDay() {
-      const response = await wordOfTheDay()
+      const response = await wordOfTheDay(category)
       const word = CryptoAES.decrypt(response, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC);
       setWord(word.toUpperCase());
     }
-    fetchWordOfTheDay()
+    if(category){
+      fetchWordOfTheDay()
+    }
     hitCount()
-  }, [])
+  }, [category])
 
   useEffect(() => {
-    setColumn(currentWord.length)
+    if(currentWord){
+      setColumn(currentWord.length)
+    }
+    else{
+      setColumn(0)
+    }
+   
   }, [currentWord])
 
   useEffect(() => {
@@ -55,58 +69,62 @@ function App() {
   }, [row])
 
   const onEnter = async () => {
-    setLoader(true)
-    const key = new Date().toLocaleDateString()
-    let obj = {
-      showHelp,
-      stats,
-      statStatus,
-      gameStatus,
-      word,
-      row,
-      userWords,
-      column,
-      currentWord,
-      gameOver
-    }
-
-    if (!gameOver) {
-      if ("vibrate" in navigator) {
-        // vibration API supported
+    if(!gameOver){
+      setLoader(true)
+      const key = new Date().toLocaleDateString()
+      let obj = {
+        showHelp,
+        stats,
+        statStatus,
+        gameStatus,
+        word,
+        row,
+        userWords,
+        // column,
+        // currentWord,
+        gameOver,
+        category
       }
-      if (currentWord.length === 5) {
-        const response = await checkWordInDictionary(currentWord)
-        //failure sucess scenarios
-        if (response) {
-          obj.row=row+1;
-          setRow(row => row + 1)
-          if (currentWord === word) {
-            navigator.vibrate([100, 100, 100]);
-            setGameStatus("Genius!")
-            setGameOver(true)
-            setStatistics(1, 1)
-            obj.gameOver=true
-          } else if (row === 5) {
-            setStatistics(1, 0)
-            setGameOver(true)
-            obj.gameOver=true
+  
+      if (!gameOver) {
+        if ("vibrate" in navigator) {
+          // vibration API supported
+        }
+        if (currentWord.length === 5) {
+          const response = await checkWordInDictionary(currentWord)
+          //failure sucess scenarios
+          if (response) {
+            obj.row = row + 1;
+            setRow(row => row + 1)
+            if (currentWord === word) {
+              navigator.vibrate([100, 100, 100]);
+              setGameStatus("Genius!")
+              setGameOver(true)
+              setStatistics(1, 1)
+              obj.gameOver = true
+            } else if (row === 5) {
+              setStatistics(1, 0)
+              setGameOver(true)
+              obj.gameOver = true
+            }
+            setCurrentWord("")
           }
-          await setCurrentWord("")
+          else {
+            navigator.vibrate(300);
+            setGameStatus("Word not found")
+            setGameOver(false)
+            obj.gameOver = false
+            setTimeout(() => {
+              setGameStatus("")
+            }, 4000)
+          }
+          setLocalStorage(key, obj);
         }
-        else {
-          navigator.vibrate(300);
-          setGameStatus("Word not found")
-          setGameOver(false)
-          obj.gameOver=false
-          setTimeout(() => {
-            setGameStatus("")
-          }, 4000)
-        }
-        setLocalStorage(key,obj);
       }
+      setLoader(false)
     }
-    setLoader(false)
   }
+
   function setLocalStorage(key, value) {
     const obj = CryptoAES.encrypt(JSON.stringify(value), process.env.REACT_APP_ENCRYPT_KEY).toString();
     localStorage.setItem(key, obj)
@@ -114,10 +132,10 @@ function App() {
   function getLocalStorage(key) {
     const obj = localStorage.getItem(key)
     let value;
-    if(obj){
+    if (obj) {
       value = JSON.parse(CryptoAES.decrypt(obj, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC));
     }
-    
+
     return value;
   }
 
@@ -148,19 +166,20 @@ function App() {
     })
   }
 
-  //optimize common function
   const onBackspace = () => {
-    if (!gameOver) {
-      if ("vibrate" in navigator) {
-        // vibration API supported
-        navigator.vibrate(100);
-      }
-      let word = currentWord.slice(0, -1);
-      if (word.length >= 0) {
-        let wordsClone = [...userWords]
-        wordsClone[row][column - 1] = ''
-        setUserWords(wordsClone)
-        setCurrentWord(word)
+    if (currentWord.length > 0 && !gameOver) {
+      if (!gameOver) {
+        if ("vibrate" in navigator) {
+          // vibration API supported
+          navigator.vibrate(100);
+        }
+        let word = currentWord.slice(0, -1);
+        if (word.length >= 0) {
+          let wordsClone = [...userWords]
+          wordsClone[row][column - 1] = ''
+          setUserWords(wordsClone)
+          setCurrentWord(word)
+        }
       }
     }
   }
@@ -220,19 +239,20 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%", overflow: "hidden" }}>
-      {showHelp ? <Help setHelpStatus={setHelpStatus} /> : statStatus ? <Statistics stats={stats} setStatStatus={setStatStatus} /> : (<>
-        <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
-        <div className="status">
-          {loader && (<div>Checking ...</div>)}
-          <h2 style={{ textAlign: "center", fontWeight:"300" }}>{gameStatus}</h2>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-          <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
-            {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className={`box ${getClassForBox(userWords[rowIndex][columnIndex], rowIndex, columnIndex, row, word)}`}>{userWords[rowIndex][columnIndex]}</div>))}
+      {showHelp ? <Help setHelpStatus={setHelpStatus} /> : statStatus ? <Statistics stats={stats} setStatStatus={setStatStatus} /> : !category ?
+        <Category onCategorySelectHandler={onCategorySelectHandler} /> : (<>
+          <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
+          <div className="status">
+            {loader && (<h2>Checking ...</h2>)}
+            <h2 style={{ textAlign: "center", fontWeight: "300" }}>{gameStatus}</h2>
           </div>
-        </div>
-        <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} getColorForAlphabet={getColorForAlphabet} />
-      </>)}
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
+            <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
+              {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className={`box col-${columnIndex} ${getClassForBox(userWords[rowIndex][columnIndex], rowIndex, columnIndex, row, word)}`}>{userWords[rowIndex][columnIndex]}</div>))}
+            </div>
+          </div>
+          <Footer onEnter={onEnter} onAlphabetClick={onAlphabetClick} onBackspace={onBackspace} getColorForAlphabet={getColorForAlphabet} />
+        </>)}
     </div>
   );
 }
