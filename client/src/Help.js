@@ -6,7 +6,7 @@ const Help = ({ setHelpStatus }) => {
     const wrongLetter = ['W', 'E', 'A', 'R', 'Y'];
     return (
         <div style={{ display: 'relative', maxWidth: "600px", padding: "0.5rem",paddingBottom:"1rem" }}>
-            <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: "pointer", fontSize:"1.8rem", fontWeight:"600"}} onClick={() => setHelpStatus(false)}>X</div>
+            <div className="header" onClick={() => setHelpStatus(false)}><img src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
             <h1 style={{textAlign:"center"}}>HOW TO PLAY</h1>
             <p>Guess the <strong>WORDLE</strong> in six tries.
             </p>

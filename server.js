@@ -7,8 +7,8 @@ const wordsList = require('./wordList');
 const path = require('path')
 const filePath = './config.json'
 
-const port=process.env.PORT || 4000
-const host=process.env.HOST || '0.0.0.0'
+const port = process.env.PORT || 4000
+const host = process.env.HOST || '0.0.0.0'
 const app = express();
 app.use(cors())
 dotenv.config();
@@ -61,16 +61,32 @@ app.get('/api/word', async (req, res) => {
    }
 })
 
-if(process.env.NODE_ENV==='production'){
+app.get('/api/hit', async (req, res) => {
+   try {
+      let hitCounter;
+      let hitPath = "./hitcount.json"
+      if (fs.existsSync(hitPath)) {
+         let obj = JSON.parse(fs.readFileSync(hitPath, 'utf-8'));
+         hitCounter = +obj.count + 1;
+         fs.writeFileSync(hitPath, `{ "count": ${hitCounter}}`);
+      }
+      res.status(200).send({ count: hitCounter })
+   }
+   catch (ex) {
+      console.log(ex)
+   }
+})
+
+if (process.env.NODE_ENV === 'production') {
    // Set a static folder
    app.use(express.static('client/build'))
 
-   app.get('*',(req,res)=>{
-      res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+   app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
    })
 }
 
-app.listen(port,host, () => {
+app.listen(port, host, () => {
    console.log(`SERVER STARTED AT ${host}:${port}`)
 });
 

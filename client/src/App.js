@@ -3,13 +3,14 @@ import './App.css';
 import Footer from './Footer';
 import Header from './Header';
 import Help from './Help';
-import { checkWordInDictionary, wordOfTheDay } from "./network/words"
+import { checkWordInDictionary, wordOfTheDay, hitCount } from "./network/words"
 import Statistics from './Statistics';
 const CryptoAES = require('crypto-js/aes')
 const CryptoENC = require('crypto-js/enc-utf8')
 
 
 function App() {
+  const [loader,setLoader]=useState(false)
   const LSData = getLocalStorage(new Date().toLocaleDateString())
   const [showHelp, setHelpStatus] = useState(LSData?.showHelp ? LSData?.showHelp : false)
   const [stats, setStats] = useState(LSData?.stats || {})
@@ -32,7 +33,6 @@ function App() {
     if(!localStorage.getItem('played')){
       setHelpStatus(true)
     }
-    
     setStatistics(0, 0);
     async function fetchWordOfTheDay() {
       const response = await wordOfTheDay()
@@ -40,6 +40,7 @@ function App() {
       setWord(word.toUpperCase());
     }
     fetchWordOfTheDay()
+    hitCount()
   }, [])
 
   useEffect(() => {
@@ -54,6 +55,7 @@ function App() {
   }, [row])
 
   const onEnter = async () => {
+    setLoader(true)
     const key = new Date().toLocaleDateString()
     let obj = {
       showHelp,
@@ -103,6 +105,7 @@ function App() {
         setLocalStorage(key,obj);
       }
     }
+    setLoader(false)
   }
   function setLocalStorage(key, value) {
     const obj = CryptoAES.encrypt(JSON.stringify(value), process.env.REACT_APP_ENCRYPT_KEY).toString();
@@ -110,7 +113,6 @@ function App() {
   }
   function getLocalStorage(key) {
     const obj = localStorage.getItem(key)
-    console.log(obj);
     let value;
     if(obj){
       value = JSON.parse(CryptoAES.decrypt(obj, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC));
@@ -202,14 +204,14 @@ function App() {
       for (let j = 0; j < 5; j++) {
         let character = userWords[i][j];
         if (character === alphabet && word.charAt(j) == alphabet) {
-          className = 'exact-match'
+          className = 'exact-match-outline'
           return className;
         }
         else if (character === alphabet && (word.indexOf(alphabet) !== -1) && (word.indexOf(alphabet) !== j)) {
-          className = 'partial-match'
+          className = 'partial-match-outline'
         }
         else if (character === alphabet) {
-          className = 'no-match'
+          className = 'no-match-outline'
         }
       }
     }
@@ -221,8 +223,8 @@ function App() {
       {showHelp ? <Help setHelpStatus={setHelpStatus} /> : statStatus ? <Statistics stats={stats} setStatStatus={setStatStatus} /> : (<>
         <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
         <div className="status">
-          {/* <h1>{word}</h1> */}
-          <h1 style={{ textAlign: "center" }}>{gameStatus}</h1>
+          {loader && (<div>Checking ...</div>)}
+          <h2 style={{ textAlign: "center", fontWeight:"300" }}>{gameStatus}</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
           <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>

@@ -18,6 +18,11 @@ export async function checkWordInDictionary(word) {
 
 
 export async function wordOfTheDay() {
-   const response = await axios.get(`/api/word`)
+   const response = await axios.get(`${APIEndpoint}/api/word`)
+   return response.data.words;
+}
+
+export async function hitCount() {
+   const response = await axios.get(`${APIEndpoint}/api/hit`)
    return response.data.words;
 }
