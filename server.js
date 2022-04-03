@@ -21,7 +21,7 @@ if (fs.existsSync(filePath)) {
 const fetchTodaysWord = async () => {
    const word = fetchRandomWords();
    const today = new Date().toLocaleDateString();
-   if (fileContents?.date !== today || fileContents?.wordOfTheDay !== '') {
+   if (fileContents?.date !== today || fileContents?.wordOfTheDay !== '' || true) {
       fs.writeFileSync(filePath, `{
       "date": "${new Date().toLocaleDateString()}",
       "wordOfTheDay": "${word}"

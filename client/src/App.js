@@ -10,12 +10,12 @@ const CryptoENC = require('crypto-js/enc-utf8')
 
 
 function App() {
-  const LSData = JSON.parse(localStorage.getItem(new Date().toLocaleDateString()))
+  const LSData = getLocalStorage(new Date().toLocaleDateString())
   const [showHelp, setHelpStatus] = useState(LSData?.showHelp ? LSData?.showHelp : false)
   const [stats, setStats] = useState(LSData?.stats || {})
   const [statStatus, setStatStatus] = useState(LSData?.statStatus ? LSData?.statStatus : false)
   const [gameStatus, setGameStatus] = useState(LSData?.gameStatus || "")
-  const [gameOver, setGameOver] = useState(false)
+  const [gameOver, setGameOver] = useState(LSData?.showHelp ? LSData?.showHelp : false)
   const [word, setWord] = useState(LSData?.word || '')
   const [userWords, setUserWords] = useState(LSData?.userWords || [
     ['', '', '', '', ''],
@@ -29,7 +29,10 @@ function App() {
   const [currentWord, setCurrentWord] = useState(LSData?.currentWord || "")
 
   useEffect(() => {
-    setHelpStatus(true)
+    if(!localStorage.getItem('played')){
+      setHelpStatus(true)
+    }
+    
     setStatistics(0, 0);
     async function fetchWordOfTheDay() {
       const response = await wordOfTheDay()
@@ -51,6 +54,20 @@ function App() {
   }, [row])
 
   const onEnter = async () => {
+    const key = new Date().toLocaleDateString()
+    let obj = {
+      showHelp,
+      stats,
+      statStatus,
+      gameStatus,
+      word,
+      row,
+      userWords,
+      column,
+      currentWord,
+      gameOver
+    }
+
     if (!gameOver) {
       if ("vibrate" in navigator) {
         // vibration API supported
@@ -59,41 +76,47 @@ function App() {
         const response = await checkWordInDictionary(currentWord)
         //failure sucess scenarios
         if (response) {
-          const key = new Date().toLocaleDateString()
-          const value = {
-            showHelp,
-            stats,
-            statStatus,
-            gameStatus,
-            word,
-            userWords,
-            row: row + 1,
-            column,
-            currentWord
-          }
-          localStorage.setItem(key, JSON.stringify(value))
+          obj.row=row+1;
           setRow(row => row + 1)
           if (currentWord === word) {
             navigator.vibrate([100, 100, 100]);
             setGameStatus("Genius!")
             setGameOver(true)
             setStatistics(1, 1)
+            obj.gameOver=true
           } else if (row === 5) {
             setStatistics(1, 0)
             setGameOver(true)
+            obj.gameOver=true
           }
-          setCurrentWord("")
+          await setCurrentWord("")
         }
         else {
           navigator.vibrate(300);
-          await setGameStatus("Word not found")
+          setGameStatus("Word not found")
           setGameOver(false)
+          obj.gameOver=false
           setTimeout(() => {
             setGameStatus("")
           }, 4000)
         }
+        setLocalStorage(key,obj);
       }
     }
+  }
+  function setLocalStorage(key, value) {
+    const obj = CryptoAES.encrypt(JSON.stringify(value), process.env.REACT_APP_ENCRYPT_KEY).toString();
+    localStorage.setItem(key, obj)
+  }
+  function getLocalStorage(key) {
+    const obj = localStorage.getItem(key)
+    console.log(obj);
+    let value;
+    if(obj){
+      value = JSON.parse(CryptoAES.decrypt(obj, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC));
+    }
+    
+    return value;
   }
 
   function setStatistics(hasPlayed, hasWon) {
