@@ -125,6 +125,7 @@ animation-name: FlipOut;
 
 .no-match-outline {
   border: 2px solid #515956;
+  background: #515956 !important;
   color: #fff;
 }
 
@@ -296,4 +297,8 @@ header img:focus{
   width:80px;
   height:80px;
   margin-bottom:20px
+}
+
+a, button, div { 
+  -ms-touch-action: manipulation; /* IE10 / touch-action: manipulation; / IE11+ */ 
 }
