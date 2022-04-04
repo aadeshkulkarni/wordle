@@ -14,14 +14,15 @@ app.use(cors())
 dotenv.config();
 
 const fetchTodaysWord = async (category) => {
-   const word = fetchRandomWords(category);
+   
    const today = new Date().toLocaleDateString();
-   const wordOfTheDay =await fetchword(category, today);
+   let wordOfTheDay =await fetchword(category, today);
    if (!wordOfTheDay) {
+      const word = fetchRandomWords(category);
       const response = await insertWordIntoDB(category, today, word)
-      console.log(response)   
+      wordOfTheDay=word;
    }
-   return word;
+   return wordOfTheDay;
 }
 
 const fetchRandomWords = (category) => {
