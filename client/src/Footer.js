@@ -34,8 +34,8 @@ function Footer({ onAlphabetClick, onEnter, onBackspace,getColorForAlphabet }) {
                 <button className={`alphabet ${getColorForAlphabet('B')}`} onClick={() => { onAlphabetClick('B') }}>B</button>
                 <button className={`alphabet ${getColorForAlphabet('N')}`} onClick={() => { onAlphabetClick('N') }}>N</button>
                 <button className={`alphabet ${getColorForAlphabet('M')}`} onClick={() => { onAlphabetClick('M') }}>M</button>
-                <button className="alphabet" onClick={() => { onBackspace() }}><img src="backspace.svg" style={{ width: "24px", height: "24px" }}/></button>
-                <button className="alphabet" onClick={onEnter}><img src="enter.svg" style={{ width: "24px", height: "24px" }}/></button>
+                <button className="alphabet" onClick={() => { onBackspace() }}><img alt="bkspace" src="backspace.svg" style={{ width: "24px", height: "24px" }}/></button>
+                <button className="alphabet" onClick={onEnter}><img alt="enter" src="enter.svg" style={{ width: "24px", height: "24px" }}/></button>
             </div>
         </div>
     </footer>

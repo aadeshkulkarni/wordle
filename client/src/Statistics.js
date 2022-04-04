@@ -4,7 +4,7 @@ const Statistics = ({ stats,setStatStatus }) => {
     
     return (
         <div style={{ display: 'relative', maxWidth: "600px", minWidth:"400px",overflow:"hidden",padding: "1rem",paddingBottom:"1rem" }}>
-            <div className="header" onClick={() => setStatStatus(false)}><img src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
+            <div className="header" onClick={() => setStatStatus(false)}><img alt="close" src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
             <h1 style={{textAlign:"center"}}>Statistics</h1>
             <div className="stat-container">
             <div className="stat">

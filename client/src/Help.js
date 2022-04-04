@@ -1,12 +1,9 @@
 import React from 'react'
 
 const Help = ({ setHelpStatus }) => {
-    const correctSpot = ['W', 'E', 'A', 'R', 'Y'];
-    const wrongSpot = ['W', 'E', 'A', 'R', 'Y'];
-    const wrongLetter = ['W', 'E', 'A', 'R', 'Y'];
     return (
         <div style={{ display: 'relative', maxWidth: "600px", padding: "0.5rem",paddingBottom:"1rem" }}>
-            <div className="header" onClick={() => setHelpStatus(false)}><img src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
+            <div className="header" onClick={() => setHelpStatus(false)}><img alt="close" src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
             <h1 style={{textAlign:"center"}}>HOW TO PLAY</h1>
             <p>Guess the <strong>WORDLE</strong> in five tries.
             </p>

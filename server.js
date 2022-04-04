@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const CryptoAES = require('crypto-js/aes')
 const wordsList = require('./wordList');
 const path = require('path')
-const filePath = './config.json'
+const { hitCounter, fetchword, insertWordIntoDB } = require('./db');
 
 const port = process.env.PORT || 4000
 const host = process.env.HOST || '0.0.0.0'
@@ -13,24 +13,13 @@ const app = express();
 app.use(cors())
 dotenv.config();
 
-let fileContents;
-if (fs.existsSync(filePath)) {
-   fileContents = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-}
-
 const fetchTodaysWord = async (category) => {
    const word = fetchRandomWords(category);
    const today = new Date().toLocaleDateString();
-   if (fileContents[category]?.date !== today || fileContents[category]?.wordOfTheDay === '') {
-      let obj = {};
-      obj[category] = {
-         "date": `${new Date().toLocaleDateString()}`,
-         "wordOfTheDay": `${word}`
-      }
-      let data = JSON.stringify({
-         ...fileContents, ...obj
-      })
-      fs.writeFileSync(filePath, data);
+   const wordOfTheDay =await fetchword(category, today);
+   if (!wordOfTheDay) {
+      const response = await insertWordIntoDB(category, today, word)
+      console.log(response)   
    }
    return word;
 }
@@ -44,10 +33,11 @@ const fetchRandomWords = (category) => {
 app.get('/api/word/:category', async (req, res) => {
    const categorySelected = req.params.category;
    const today = new Date().toLocaleDateString();
-   if (fileContents[categorySelected]?.date === today && fileContents[categorySelected]?.wordOfTheDay !== '') {
-      
+   const wordOfTheDay =await fetchword(categorySelected, today);
+   if (wordOfTheDay) {
+
       res.status(200).send({
-         words: fileContents[categorySelected].wordOfTheDay,
+         words: wordOfTheDay,
          status: 'success'
       })
    }
@@ -88,17 +78,14 @@ app.get('/api/categories', async (req, res) => {
 
 app.get('/api/hit', async (req, res) => {
    try {
-      let hitCounter;
-      let hitPath = "./hitcount.json"
-      if (fs.existsSync(hitPath)) {
-         let obj = JSON.parse(fs.readFileSync(hitPath, 'utf-8'));
-         hitCounter = +obj.count + 1;
-         fs.writeFileSync(hitPath, `{ "count": ${hitCounter}}`);
-      }
-      res.status(200).send({ count: hitCounter })
+      await hitCounter()
+      res.status(200).send('Hit recorded successfully')
    }
    catch (ex) {
-      console.log(ex)
+      res.status(502).send({
+         error: `Error: ${ex}`,
+         status: 'error'
+      })
    }
 })
 

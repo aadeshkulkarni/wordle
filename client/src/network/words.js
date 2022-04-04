@@ -17,12 +17,12 @@ export async function checkWordInDictionary(word) {
 // }
 
 export async function fetchAllCategories() {
-   const response = await axios.get('/api/categories')
+   const response = await axios.get(`${APIEndpoint}/api/categories`)
    return response.data.categories
 }
 
 export async function wordOfTheDay(category) {
-   const response = await axios.get(`/api/word/${category}`)
+   const response = await axios.get(`${APIEndpoint}/api/word/${category}`)
    return response.data.words;
 }
 
