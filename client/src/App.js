@@ -64,7 +64,7 @@ function App() {
   useEffect(() => {
     if ((row === 5) && (currentWord.toUpperCase() !== word.toUpperCase())) {
       setGameStatus(word)
-      setStatistics(1, 0)
+      // setStatistics(1, 0)
     }
   }, [row])
 
@@ -102,7 +102,7 @@ function App() {
               setGameOver(true)
               setStatistics(1, 1)
               obj.gameOver = true
-            } else if (row === 5) {
+            } else if (obj.row === 5) {
               setStatistics(1, 0)
               setGameOver(true)
               obj.gameOver = true
