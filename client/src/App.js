@@ -36,7 +36,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem('played')) {
+    if (!localStorage.getItem('played') && !category) {
       setHelpStatus(true)
     }
     setStatistics(0, 0);
@@ -243,10 +243,10 @@ function App() {
         <Category onCategorySelectHandler={onCategorySelectHandler} /> : (<>
           <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
           <div className="status">
-            {loader && (<h2>Checking ...</h2>)}
-            <h2 style={{ textAlign: "center", fontWeight: "300" }}>{gameStatus}</h2>
+            <h2 style={{ textAlign: "center", fontWeight: "600", textTransform:'uppercase',fontSize:'1.2rem' }}>{loader ? 'Searching ...' : gameStatus}</h2>
           </div>
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
+          <h2 style={{ textAlign: "center", fontWeight: "600", textTransform:'uppercase', fontSize:'1.2rem' }}>{category}</h2>
             <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
               {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className={`box col-${columnIndex} ${getClassForBox(userWords[rowIndex][columnIndex], rowIndex, columnIndex, row, word)}`}>{userWords[rowIndex][columnIndex]}</div>))}
             </div>
