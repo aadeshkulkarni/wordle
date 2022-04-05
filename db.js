@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const uri =`mongodb+srv://${process.env.MONGO_DB}/myFirstDatabase?retryWrites=true&w=majority`;
+const uri =`mongodb+srv://wordle:wordle2022@wordle.jhm7z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri);
 
 async function fetchword(category, date) {

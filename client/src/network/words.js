@@ -17,16 +17,28 @@ export async function checkWordInDictionary(word) {
 // }
 
 export async function fetchAllCategories() {
-   const response = await axios.get(`/api/categories`)
+   const response = await axios.get(`${APIEndpoint}/api/categories`)
    return response.data.categories
 }
 
 export async function wordOfTheDay(category) {
-   const response = await axios.get(`/api/word/${category}`)
+   const response = await axios.get(`${APIEndpoint}/api/word/${category}`)
    return response.data.words;
 }
 
 export async function hitCount() {
-   const response = await axios.get(`/api/hit`)
+   const response = await axios.get(`${APIEndpoint}/api/hit`)
    return response.data.words;
+}
+
+export async function fetchLeaderboard() {
+   const response = await axios.get(`${APIEndpoint}/api/leaderboard`)
+   console.log(response)
+   return response.data.leaderboard;
+}
+
+export async function InsertIntoBoard(name, category, time) {
+   const response = await axios.post(`${APIEndpoint}/api/leaderboard`, { name, category, time })
+   console.log(response)
+   return response;
 }
