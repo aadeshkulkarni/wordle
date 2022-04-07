@@ -7,12 +7,15 @@ import Category from './Category';
 import { checkWordInDictionary, wordOfTheDay, hitCount, fetchLeaderboard, } from "./network/words"
 import Statistics from './Statistics';
 import HallOfFame from './HallOfFame';
+import moment from 'moment';
+
 const CryptoAES = require('crypto-js/aes')
 const CryptoENC = require('crypto-js/enc-utf8')
 
 function App() {
+  const dateToday = moment().format('DD-MM-YYYY')
   const [loader, setLoader] = useState(false)
-  const LSData = getLocalStorage(new Date().toLocaleDateString())
+  const LSData = getLocalStorage(dateToday)
   const [category, setCategory] = useState(LSData?.category ? LSData?.category : '')
   const [showHelp, setHelpStatus] = useState(LSData?.showHelp ? LSData?.showHelp : false)
   const [showHallOfFame, setShowHOF] = useState(false)
@@ -99,7 +102,7 @@ function App() {
   const onEnter = async () => {
     if (!gameOver) {
       setLoader(true)
-      const key = new Date().toLocaleDateString()
+      const key = dateToday
       let obj = {
         showHelp,
         stats,

@@ -41,7 +41,7 @@ const Statistics = ({ stats, setStatStatus }) => {
                         <span>Rank</span>
                         <span>Name</span>
                     </div> : <h5 style={{ width: "100%", textAlign: "center", marginBottom: "0" }}>No data available</h5>}
-                {leaderboard && leaderboard.length > 0 && leaderboard.map((leader, index) => (<div className="row">
+                {leaderboard && leaderboard.length > 0 && leaderboard.map((leader, index) => (<div key={index} className="row">
                     <span>{index + 1}</span>
                     <span>{leader.name}</span>
                 </div>))}

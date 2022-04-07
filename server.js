@@ -6,6 +6,7 @@ const CryptoAES = require('crypto-js/aes')
 const wordsList = require('./wordList');
 const path = require('path')
 const { hitCounter, fetchword, insertWordIntoDB, getLeaderBoardData, setLeaderBoardData } = require('./db');
+const moment = require('moment')
 
 const port = process.env.PORT || 4000
 const host = process.env.HOST || '0.0.0.0'
@@ -15,12 +16,11 @@ app.use(express.json());
 dotenv.config();
 
 const fetchTodaysWord = async (category) => {
-
-   const today = new Date().toLocaleDateString();
-   let wordOfTheDay = await fetchword(category, today);
+   const dateToday = moment().format('DD-MM-YYYY')
+   let wordOfTheDay = await fetchword(category, dateToday);
    if (!wordOfTheDay) {
       const word = fetchRandomWords(category);
-      const response = await insertWordIntoDB(category, today, word)
+      const response = await insertWordIntoDB(category, dateToday, word)
       wordOfTheDay = word;
    }
    return wordOfTheDay;
@@ -34,8 +34,8 @@ const fetchRandomWords = (category) => {
 
 app.get('/api/word/:category', async (req, res) => {
    const categorySelected = req.params.category;
-   const today = new Date().toLocaleDateString();
-   const wordOfTheDay = await fetchword(categorySelected, today);
+   const dateToday = moment().format('DD-MM-YYYY')
+   const wordOfTheDay = await fetchword(categorySelected, dateToday);
    if (wordOfTheDay) {
 
       res.status(200).send({

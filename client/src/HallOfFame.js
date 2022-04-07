@@ -21,7 +21,7 @@ const HallOfFame = ({ setStatStatus, setShowHOF, category }) => {
             <img src="halloffame.svg" alt="HallOfGame" />
             <label style={{ fontSize: "1.3rem", color: "#50c7af", fontWeight: "700" }}>Congratulations!</label>
             <label style={{ fontSize: "1rem" }}>You've entered our Hall of Game!</label>
-            <input maxlength="15" className={`${error && 'error'}`} autoFocus type="text" placeholder="Your hall of fame name" onChange={(e) => { setName(e.target.value) }} value={name} />
+            <input maxLength="15" className={`${error && 'error'}`} autoFocus type="text" placeholder="Your hall of fame name" onChange={(e) => { setName(e.target.value) }} value={name} />
             <button className="btn-enter" onClick={enterHandler}>Enter</button>
         </div>
     )
