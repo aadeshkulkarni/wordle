@@ -9,20 +9,6 @@ import Statistics from './Statistics';
 import HallOfFame from './HallOfFame';
 const CryptoAES = require('crypto-js/aes')
 const CryptoENC = require('crypto-js/enc-utf8')
-let timerInterval;
-
-function setTimer() {
-  const timerInterval = setInterval(() => {
-    const time = +(localStorage.getItem("time") || 0) + 1
-    localStorage.setItem("time", time)
-    if (time > 500) {
-      clearInterval(timerInterval)
-    }
-  }, 1000)
-  return timerInterval;
-}
-
-
 
 function App() {
   const [loader, setLoader] = useState(false)
@@ -52,7 +38,8 @@ function App() {
 
   useEffect(() => {
     if (word) {
-      timerInterval = setTimer();
+      const time = Date.now()
+      localStorage.setItem("time", time)
     }
   }, [word])
 
@@ -90,15 +77,19 @@ function App() {
   }, [row])
 
   async function isHallOfFamer() {
-    const timer = localStorage.getItem("time")
+    const endTime = Date.now()
+    const timer = Math.ceil(((endTime - localStorage.getItem("time"))/1000))
     if (timer) {
-      const response = await fetchLeaderboard();
-      if (response.length < 10) {
+      const leaderboard = await fetchLeaderboard();
+      if (leaderboard.length < 10) {
+        setShowHOF(true);
+      }
+      else if (leaderboard.length === 0) {
         setShowHOF(true);
       }
       else {
-        let count = response.length;
-        if (response[count - 1].time > timer) {
+        let count = leaderboard.length;
+        if (leaderboard[count - 1]?.time > timer) {
           setShowHOF(true);
         }
       }
@@ -139,13 +130,11 @@ function App() {
               setGameOver(true)
               setStatistics(1, 1)
               obj.gameOver = true
-              clearInterval(timerInterval);
               setTimeout(() => {
                 isHallOfFamer();
-              }, 2000)
+              }, 1000)
 
             } else if (obj.row === 5) {
-              clearInterval(timerInterval);
               setStatistics(1, 0)
               setGameOver(true)
               obj.gameOver = true

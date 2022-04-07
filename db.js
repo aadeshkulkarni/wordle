@@ -67,8 +67,7 @@ async function getLeaderBoardData() {
         const database = client.db('wordle');
         const leaderboard = database.collection('leaderboard');
         const dateToday = new Date().toLocaleDateString() 
-        console.log(dateToday);
-        const data = await leaderboard.find({ date: dateToday}, { name: 1}).sort({date: 1}).limit(10).toArray();;
+        const data = await leaderboard.find({ date: dateToday}, { name: 1}).sort({time: 1}).limit(10).toArray();;
         return data;
     } catch (er) {
         console.log(er)

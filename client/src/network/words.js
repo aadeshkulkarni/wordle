@@ -1,5 +1,6 @@
 const axios = require('axios')
-const APIEndpoint = process.env.REACT_APP_API_ENDPOINT;
+const mode = 'prod'
+const APIEndpoint = mode === "dev" ? process.env.REACT_APP_API_ENDPOINT : ''
 
 export async function checkWordInDictionary(word) {
    try {
@@ -33,12 +34,13 @@ export async function hitCount() {
 
 export async function fetchLeaderboard() {
    const response = await axios.get(`${APIEndpoint}/api/leaderboard`)
-   console.log(response)
-   return response.data.leaderboard;
+   if (response.data.status === 'Success')
+      return response.data.data;
+   else
+      return []
 }
 
 export async function InsertIntoBoard(name, category, time) {
    const response = await axios.post(`${APIEndpoint}/api/leaderboard`, { name, category, time })
-   console.log(response)
    return response;
 }

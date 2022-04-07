@@ -4,12 +4,11 @@ import { InsertIntoBoard } from './network/words';
 const HallOfFame = ({ setStatStatus, setShowHOF, category }) => {
     const [name, setName] = useState("");
     const [error, setError] = useState(false);
-    const enterHandler = () => {
+    const enterHandler = async () => {
         if (name.trim() !== '') {
-            const timer = localStorage.getItem("time")
-            // API call to insert data
-            // Switch to stats board
-            InsertIntoBoard(name, category, timer)
+            const endTime = Date.now()
+            const timer = Math.ceil(((endTime - localStorage.getItem("time")) / 1000))
+            await InsertIntoBoard(name, category, timer)
             setShowHOF(false)
             setStatStatus(true)
         }

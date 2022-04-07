@@ -11,16 +11,17 @@ const port = process.env.PORT || 4000
 const host = process.env.HOST || '0.0.0.0'
 const app = express();
 app.use(cors())
+app.use(express.json());
 dotenv.config();
 
 const fetchTodaysWord = async (category) => {
-   
+
    const today = new Date().toLocaleDateString();
-   let wordOfTheDay =await fetchword(category, today);
+   let wordOfTheDay = await fetchword(category, today);
    if (!wordOfTheDay) {
       const word = fetchRandomWords(category);
       const response = await insertWordIntoDB(category, today, word)
-      wordOfTheDay=word;
+      wordOfTheDay = word;
    }
    return wordOfTheDay;
 }
@@ -34,7 +35,7 @@ const fetchRandomWords = (category) => {
 app.get('/api/word/:category', async (req, res) => {
    const categorySelected = req.params.category;
    const today = new Date().toLocaleDateString();
-   const wordOfTheDay =await fetchword(categorySelected, today);
+   const wordOfTheDay = await fetchword(categorySelected, today);
    if (wordOfTheDay) {
 
       res.status(200).send({
@@ -77,13 +78,13 @@ app.get('/api/categories', async (req, res) => {
    }
 })
 
-app.get('/api/leaderboard/', async (req, res) => {
+app.get('/api/leaderboard', async (req, res) => {
    try {
       const data = await getLeaderBoardData()
-         res.status(200).send({
-            status: 'Success',
-            data: data,
-         })
+      res.status(200).send({
+         status: 'Success',
+         data: data,
+      })
    }
    catch (ex) {
       res.status(500).send({
@@ -93,21 +94,21 @@ app.get('/api/leaderboard/', async (req, res) => {
    }
 })
 
-app.post('/api/leaderboard/', async (req, res) => {
+app.post('/api/leaderboard', async (req, res) => {
    try {
-      console.log(req.params.name, req.params.category, req.params.time)
-      const timer = req.params.time;
+      const timer = req.body.time;
       const data = await getLeaderBoardData()
       if (data.length < 10 || data[9].time > timer) {
-         await setLeaderBoardData(req)
+         const { name, category, time } = req?.body;
+         await setLeaderBoardData({ name, category, time: Number(time || 0) })
          res.status(200).send({
-          status: 'Success',
-          message: 'data inserted successfully',
-          data: data,
-          reshuffled: true,
+            status: 'Success',
+            message: 'data inserted successfully',
+            data: data,
+            reshuffled: true,
          })
       }
-      else{
+      else {
          res.status(200).send({
             status: 'Success',
             data: data,

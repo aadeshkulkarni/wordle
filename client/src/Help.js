@@ -2,9 +2,10 @@ import React from 'react'
 
 const Help = ({ setHelpStatus }) => {
     return (
-        <div style={{ display: 'relative', maxWidth: "600px", padding: "0.5rem",paddingBottom:"1rem" }}>
+        <div style={{ display: 'relative', maxWidth: "600px", padding: "0.75rem", paddingBottom: "1rem" }}>
             <div className="header" onClick={() => setHelpStatus(false)}><img alt="close" src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
-            <h1 style={{textAlign:"center"}}>HOW TO PLAY</h1>
+            <h1 style={{ textAlign: "center", fontWeight:"300",borderTop:"1px solid #FFF",borderBottom:"1px solid #FFF", padding:"8px 0"}}>WORDLE</h1>
+            <h3 style={{ textAlign: "center" }}>HOW TO PLAY</h3>
             <p>Guess the <strong>WORDLE</strong> in five tries.
             </p>
             <p>Each guess must be a valid five-letter word. Hit the enter button to submit.
@@ -12,7 +13,7 @@ const Help = ({ setHelpStatus }) => {
             <p>After each guess, the color of the tiles will change to show how close your guess was to the word.
             </p>
             <hr />
-            <h2>Examples</h2>
+            <h3>Examples</h3>
 
             <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
                 <div className={`box exact-match`}>W</div>
