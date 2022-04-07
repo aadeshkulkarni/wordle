@@ -4,10 +4,24 @@ import Footer from './Footer';
 import Header from './Header';
 import Help from './Help';
 import Category from './Category';
-import { checkWordInDictionary, wordOfTheDay, hitCount } from "./network/words"
+import { checkWordInDictionary, wordOfTheDay, hitCount, fetchLeaderboard, } from "./network/words"
 import Statistics from './Statistics';
+import HallOfFame from './HallOfFame';
 const CryptoAES = require('crypto-js/aes')
 const CryptoENC = require('crypto-js/enc-utf8')
+let timerInterval;
+
+function setTimer() {
+  const timerInterval = setInterval(() => {
+    const time = +(localStorage.getItem("time") || 0) + 1
+    localStorage.setItem("time", time)
+    if (time > 500) {
+      clearInterval(timerInterval)
+    }
+  }, 1000)
+  return timerInterval;
+}
+
 
 
 function App() {
@@ -15,6 +29,7 @@ function App() {
   const LSData = getLocalStorage(new Date().toLocaleDateString())
   const [category, setCategory] = useState(LSData?.category ? LSData?.category : '')
   const [showHelp, setHelpStatus] = useState(LSData?.showHelp ? LSData?.showHelp : false)
+  const [showHallOfFame, setShowHOF] = useState(false)
   const [stats, setStats] = useState(LSData?.stats || {})
   const [statStatus, setStatStatus] = useState(LSData?.statStatus ? LSData?.statStatus : false)
   const [gameStatus, setGameStatus] = useState(LSData?.gameStatus || "")
@@ -36,6 +51,12 @@ function App() {
   }
 
   useEffect(() => {
+    if (word) {
+      timerInterval = setTimer();
+    }
+  }, [word])
+
+  useEffect(() => {
     if (!localStorage.getItem('played') && !category) {
       setHelpStatus(true)
     }
@@ -45,20 +66,20 @@ function App() {
       const word = CryptoAES.decrypt(response, process.env.REACT_APP_ENCRYPT_KEY).toString(CryptoENC);
       setWord(word.toUpperCase());
     }
-    if(category){
+    if (category) {
       fetchWordOfTheDay()
     }
     hitCount()
   }, [category])
 
   useEffect(() => {
-    if(currentWord){
+    if (currentWord) {
       setColumn(currentWord.length)
     }
-    else{
+    else {
       setColumn(0)
     }
-   
+
   }, [currentWord])
 
   useEffect(() => {
@@ -68,8 +89,24 @@ function App() {
     }
   }, [row])
 
+  async function isHallOfFamer() {
+    const timer = localStorage.getItem("time")
+    if (timer) {
+      const response = await fetchLeaderboard();
+      if (response.length < 10) {
+        setShowHOF(true);
+      }
+      else {
+        let count = response.length;
+        if (response[count - 1].time > timer) {
+          setShowHOF(true);
+        }
+      }
+    }
+  }
+
   const onEnter = async () => {
-    if(!gameOver){
+    if (!gameOver) {
       setLoader(true)
       const key = new Date().toLocaleDateString()
       let obj = {
@@ -85,7 +122,7 @@ function App() {
         gameOver,
         category
       }
-  
+
       if (!gameOver) {
         if ("vibrate" in navigator) {
           // vibration API supported
@@ -102,7 +139,13 @@ function App() {
               setGameOver(true)
               setStatistics(1, 1)
               obj.gameOver = true
+              clearInterval(timerInterval);
+              setTimeout(() => {
+                isHallOfFamer();
+              }, 2000)
+
             } else if (obj.row === 5) {
+              clearInterval(timerInterval);
               setStatistics(1, 0)
               setGameOver(true)
               obj.gameOver = true
@@ -240,13 +283,13 @@ function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%", overflow: "hidden" }}>
       {showHelp ? <Help setHelpStatus={setHelpStatus} /> : statStatus ? <Statistics stats={stats} setStatStatus={setStatStatus} /> : !category ?
-        <Category onCategorySelectHandler={onCategorySelectHandler} /> : (<>
+        <Category onCategorySelectHandler={onCategorySelectHandler} /> : showHallOfFame ? <HallOfFame setShowHOF={setShowHOF} setStatStatus={setStatStatus} category={category} /> : (<>
           <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
           <div className="status">
-            <h2 style={{ textAlign: "center", fontWeight: "600", textTransform:'uppercase',fontSize:'1.2rem' }}>{loader ? 'Searching ...' : gameStatus}</h2>
+            <h2 style={{ textAlign: "center", fontWeight: "600", textTransform: 'uppercase', fontSize: '1.2rem' }}>{loader ? 'Searching ...' : gameStatus}</h2>
           </div>
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", flex: 1 }}>
-          <h2 style={{ textAlign: "center", fontWeight: "600", textTransform:'uppercase', fontSize:'1.2rem' }}>{category}</h2>
+            <h2 style={{ textAlign: "center", fontWeight: "600", textTransform: 'uppercase', fontSize: '1.2rem' }}>{category}</h2>
             <div style={{ maxWidth: "500px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "0.5rem", marginBottom: "0.5rem" }}>
               {userWords.map((_, rowIndex) => userWords.map((_, columnIndex) => <div key={`${rowIndex}${columnIndex}`} className={`box col-${columnIndex} ${getClassForBox(userWords[rowIndex][columnIndex], rowIndex, columnIndex, row, word)}`}>{userWords[rowIndex][columnIndex]}</div>))}
             </div>

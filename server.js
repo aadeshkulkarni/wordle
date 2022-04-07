@@ -79,9 +79,10 @@ app.get('/api/categories', async (req, res) => {
 
 app.post('/api/leaderboard/', async (req, res) => {
    try {
+      console.log(req.params.name, req.params.category, req.params.time)
       const timer = req.params.time;
       const data = await getLeaderBoardData()
-      if (data.length >= 10 && data[10].time > timer) {
+      if (data.length <= 10 || data[10].time > timer) {
          await setLeaderBoardData(req)
          res.status(200).send({
           status: 'Success',
