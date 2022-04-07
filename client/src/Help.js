@@ -4,7 +4,7 @@ const Help = ({ setHelpStatus }) => {
     return (
         <div style={{ display: 'relative', maxWidth: "600px", padding: "0.75rem", paddingBottom: "1rem" }}>
             <div className="header" onClick={() => setHelpStatus(false)}><img alt="close" src="close.svg" style={{ width: "24px", height: "24px" }} /></div>
-            <h1 style={{ textAlign: "center", fontWeight:"300",borderTop:"1px solid #FFF",borderBottom:"1px solid #FFF", padding:"8px 0"}}>WORDLE</h1>
+            <h1 style={{ textAlign: "center", fontWeight:"300",borderBottom:"1px solid #FFF", padding:"8px 0"}}>WORDLE</h1>
             <h3 style={{ textAlign: "center" }}>HOW TO PLAY</h3>
             <p>Guess the <strong>WORDLE</strong> in five tries.
             </p>
