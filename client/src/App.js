@@ -4,7 +4,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Help from './Help';
 import Category from './Category';
-import { checkWordInDictionary, wordOfTheDay, hitCount, fetchLeaderboard, } from "./network/words"
+import { checkWordInDictionary, wordOfTheDay, hitCount, fetchLeaderboard, fetchAllCategories } from "./network/words"
 import Statistics from './Statistics';
 import HallOfFame from './HallOfFame';
 import moment from 'moment';
@@ -34,10 +34,21 @@ function App() {
   const [row, setRow] = useState(LSData?.row ? LSData?.row : 0)
   const [column, setColumn] = useState()
   const [currentWord, setCurrentWord] = useState("")
+  const [blocked, setBlocked] = useState(false)
+  const [categories, setCategories] = useState();
 
   const onCategorySelectHandler = (e) => {
     setCategory(e.target.dataset.categoryName)
   }
+
+
+  useEffect(() => {
+      async function fetchCategories() {
+          const response = await fetchAllCategories()
+          setCategories(response);
+      }
+      fetchCategories()
+  }, [])
 
   useEffect(() => {
     if (word) {
@@ -100,7 +111,7 @@ function App() {
   }
 
   const onEnter = async () => {
-    if (!gameOver) {
+    if (!gameOver && !blocked) {
       setLoader(true)
       const key = dateToday
       let obj = {
@@ -119,6 +130,7 @@ function App() {
 
       if (!gameOver) {
         if (currentWord.length === 5) {
+          setBlocked(true)
           const response = await checkWordInDictionary(currentWord)
           //failure sucess scenarios
           if (response) {
@@ -142,6 +154,7 @@ function App() {
               obj.gameOver = true
             }
             setCurrentWord("")
+            
           }
           else {
             if ("vibrate" in navigator) {
@@ -156,6 +169,7 @@ function App() {
           }
           setLocalStorage(key, obj);
         }
+        setBlocked(false)
       }
       setLoader(false)
     }
@@ -204,7 +218,7 @@ function App() {
 
   const onBackspace = () => {
     if (currentWord.length > 0 && !gameOver) {
-      if (!gameOver) {
+      if (!gameOver && !blocked) {
         if ("vibrate" in navigator) {
           navigator?.vibrate(100);
         }
@@ -220,7 +234,7 @@ function App() {
   }
 
   const onAlphabetClick = (character) => {
-    if (!gameOver) {
+    if (!gameOver && !blocked) {
       if ("vibrate" in navigator) {
         navigator?.vibrate(50);
       }
@@ -241,7 +255,7 @@ function App() {
       if (boxCharacter.toUpperCase() === word?.charAt(colIndex).toUpperCase()) {
         className = 'exact-match'
       }
-      else if (word.indexOf(boxCharacter) != -1) {
+      else if (word.indexOf(boxCharacter) !== -1) {
         className = "partial-match"
       }
       else {
@@ -256,7 +270,7 @@ function App() {
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < 5; j++) {
         let character = userWords[i][j];
-        if (character === alphabet && word.charAt(j) == alphabet) {
+        if (character === alphabet && word.charAt(j) === alphabet) {
           className = 'exact-match-outline'
           return className;
         }
@@ -274,7 +288,7 @@ function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: "100%", overflow: "hidden" }}>
       {showHelp ? <Help setHelpStatus={setHelpStatus} /> : statStatus ? <Statistics stats={stats} setStatStatus={setStatStatus} /> : !category ?
-        <Category onCategorySelectHandler={onCategorySelectHandler} /> : showHallOfFame ? <HallOfFame setShowHOF={setShowHOF} setStatStatus={setStatStatus} category={category} /> : (<>
+        <Category onCategorySelectHandler={onCategorySelectHandler} categories={categories} /> : showHallOfFame ? <HallOfFame setShowHOF={setShowHOF} setStatStatus={setStatStatus} category={category} /> : (<>
           <Header setHelpStatus={setHelpStatus} setStatStatus={setStatStatus} />
           <div className="status">
             <h2 style={{ textAlign: "center", fontWeight: "600", textTransform: 'uppercase', fontSize: '1.2rem' }}>{loader ? 'Searching ...' : gameStatus}</h2>
