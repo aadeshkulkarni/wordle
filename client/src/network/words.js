@@ -1,6 +1,6 @@
 const axios = require('axios')
 const mode = 'prod'
-const APIEndpoint = mode === "dev" ? process.env.REACT_APP_API_ENDPOINT : ''
+const APIEndpoint = mode === "dev" ? process.env.REACT_APP_API_ENDPOINT: ''
 
 export async function checkWordInDictionary(word) {
    try {
