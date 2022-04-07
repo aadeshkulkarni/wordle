@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const CryptoAES = require('crypto-js/aes')
 const wordsList = require('./wordList');
 const path = require('path')
-const { hitCounter, fetchword, insertWordIntoDB } = require('./db');
+const { hitCounter, fetchword, insertWordIntoDB, getLeaderBoardData, setLeaderBoardData } = require('./db');
 
 const port = process.env.PORT || 4000
 const host = process.env.HOST || '0.0.0.0'
@@ -72,6 +72,35 @@ app.get('/api/categories', async (req, res) => {
    catch {
       res.status(500).send({
          error: 'Something Went Wrong!',
+         status: 'error'
+      })
+   }
+})
+
+app.post('/api/leaderboard/', async (req, res) => {
+   try {
+      const timer = req.params.time;
+      const data = await getLeaderBoardData()
+      if (data.length >= 10 && data[10].time > timer) {
+         await setLeaderBoardData(req)
+         res.status(200).send({
+          status: 'Success',
+          message: 'data inserted successfully',
+          data: data,
+          reshuffled: true,
+         })
+      }
+      else{
+         res.status(200).send({
+            status: 'Success',
+            data: data,
+            reshuffled: false,
+         })
+      }
+   }
+   catch (ex) {
+      res.status(500).send({
+         error: `Error: ${ex}`,
          status: 'error'
       })
    }

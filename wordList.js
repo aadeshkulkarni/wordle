@@ -7,9 +7,9 @@ const wordsList = [
       "technology": [
          "Agile", "API", "HTML", "CSS", "JAVASCRIPT", "BOOTSTRAP", "CHROME", "BROWSER", "CACHE", "HTTPS", "Array", "Babel", "Block", "Caret", "Arrow", "CLOUD", "Error", "Media", "Patch", "Query", "React", "Regex"
       ],
-      "countries": [
-         "Nauru", "Palau", "Tonga", "Samoa", "Malta", "Gabon", "Paris", "Qatar", "Libya", "Haiti", "Benin", "Chile", "Syria", "Niger", "Nepal", "Yemen", "Ghana", "Sudan", "Spain", "Kenya", "Italy", "Egypt", "Japan", "India", "China","Idaho","Maine","Texas", "Milan", "Rome", "Dubai", "Dakar", "Busan", "Wuhan", "Tokyo", "Kyoto", "Seoul", "Delhi", "Osaka", "Cairo", "Lagos", "Miami",
-      ],
+      "science": [
+         "acid", "basic", "absorb", "algae", "anion", "anode", "diode", "biome", "force", "cation", "cramp", "crust","decay","delta","flask","dense","phase","scale", "solid", "weigh","state","fluid","group","water","boron", "xenon","carbon","argon", "euler", "Fermi", "chain"
+,       ],
       "food": [
          "pizza", "pasta", "Water", "Lemon", "candy", "vegan", "jelly", "Apple", "Mango", "fruit", "honey", "bread","bacon","onion","sushi","anise","aspic","bagel","basil","beans","berry"
       ],
