@@ -8,7 +8,7 @@ const wordsList = [
          "Agile", "API", "HTML", "CSS", "JAVASCRIPT", "BOOTSTRAP", "CHROME", "BROWSER", "CACHE", "HTTPS", "Array", "Babel", "Block", "Caret", "Arrow", "CLOUD", "Error", "Media", "Patch", "Query", "React", "Regex"
       ],
       "science": [
-         "acid", "basic", "absorb", "algae", "anion", "anode", "diode", "biome", "force", "cation", "cramp", "crust","decay","delta","flask","dense","phase","scale", "solid", "weigh","state","fluid","group","water","boron", "xenon","carbon","argon", "euler", "Fermi", "chain"
+         "acid", "basic", "absorb", "algae", "anion", "anode", "diode", "biome", "force", "cation", "cramp", "crust","decay","delta","flask","dense","phase","scale", "solid", "weigh","state","fluid","group","water","boron", "xenon","carbon","argon", "Fermi", "chain"
 ,       ],
       "food": [
          "pizza", "pasta", "Water", "Lemon", "candy", "vegan", "jelly", "Apple", "Mango", "fruit", "honey", "bread","bacon","onion","sushi","anise","aspic","bagel","basil","beans","berry"

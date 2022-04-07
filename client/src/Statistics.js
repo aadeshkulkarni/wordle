@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { fetchLeaderboard } from './network/words';
 const Statistics = ({ stats, setStatStatus }) => {
     //const lb = [{ rank: 1, name: 'Aadesh' }, { rank: 2, name: 'Harsha' }, { rank: 3, name: 'Manjeet' }, { rank: 4, name: 'Dalee' }, { rank: 5, name: 'Aditya' }, { rank: 6, name: 'Bhumika' }, { rank: 7, name: 'Rajat' }, { rank: 8, name: 'Naveen' }, { rank: 9, name: 'Pavithra' }, { rank: 10, name: 'Aadesh' }]
-    const [leaderboard, setLeaderboard] = useState([])
+    const [leaderboard, setLeaderboard] = useState()
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -36,13 +36,13 @@ const Statistics = ({ stats, setStatStatus }) => {
             </div>
             <h2 style={{ textAlign: "center", marginBottom: "0" }}>Leaderboard</h2>
             <div className="leaderboard">
-                {leaderboard.length > 0 ?
+                {!leaderboard ? <h5 style={{ width: "100%", textAlign: "center", marginBottom: "0" }}>Loading...</h5> : leaderboard.length > 0 ?
                     <div className="row title">
                         <span>Rank</span>
                         <span>Name</span>
                     </div> : <h5 style={{ width: "100%", textAlign: "center", marginBottom: "0" }}>No data available</h5>}
-                {leaderboard.length > 0 && leaderboard.map((leader,index) => (<div className="row">
-                    <span>{index+1}</span>
+                {leaderboard && leaderboard.length > 0 && leaderboard.map((leader, index) => (<div className="row">
+                    <span>{index + 1}</span>
                     <span>{leader.name}</span>
                 </div>))}
             </div>
