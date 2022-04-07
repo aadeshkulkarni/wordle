@@ -1,17 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { fetchAllCategories } from "./network/words"
+import React from 'react'
 
-export default function Category({ onCategorySelectHandler }) {
-    const [categories, setCategories] = useState();
 
-    useEffect(() => {
-        async function fetchCategories() {
-            const response = await fetchAllCategories()
-            setCategories(response);
-        }
-        fetchCategories()
-    }, [])
-
+export default function Category({ onCategorySelectHandler, categories }) {
     return (
         categories ? categories.length > 0 && <>
             <div className="category_container">
