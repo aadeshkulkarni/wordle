@@ -115,9 +115,6 @@ function App() {
       }
 
       if (!gameOver) {
-        if ("vibrate" in navigator) {
-          // vibration API supported
-        }
         if (currentWord.length === 5) {
           const response = await checkWordInDictionary(currentWord)
           //failure sucess scenarios
@@ -125,7 +122,9 @@ function App() {
             obj.row = row + 1;
             setRow(row => row + 1)
             if (currentWord === word) {
-              navigator.vibrate([100, 100, 100]);
+              if ("vibrate" in navigator) {
+                navigator?.vibrate([100, 100, 100]);
+              }
               setGameStatus("Genius!")
               setGameOver(true)
               setStatistics(1, 1)
@@ -142,7 +141,9 @@ function App() {
             setCurrentWord("")
           }
           else {
-            navigator.vibrate(300);
+            if ("vibrate" in navigator) {
+              navigator?.vibrate(300);
+            }
             setGameStatus("Word not found")
             setGameOver(false)
             obj.gameOver = false
@@ -202,8 +203,7 @@ function App() {
     if (currentWord.length > 0 && !gameOver) {
       if (!gameOver) {
         if ("vibrate" in navigator) {
-          // vibration API supported
-          navigator.vibrate(100);
+          navigator?.vibrate(100);
         }
         let word = currentWord.slice(0, -1);
         if (word.length >= 0) {
@@ -219,8 +219,7 @@ function App() {
   const onAlphabetClick = (character) => {
     if (!gameOver) {
       if ("vibrate" in navigator) {
-        // vibration API supported
-        navigator.vibrate(50);
+        navigator?.vibrate(50);
       }
       let newWord = currentWord + character;
       if (newWord.length <= 5) {

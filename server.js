@@ -96,6 +96,7 @@ app.get('/api/leaderboard', async (req, res) => {
 
 app.post('/api/leaderboard', async (req, res) => {
    try {
+
       const timer = req.body.time;
       const data = await getLeaderBoardData()
       if (data.length < 10 || data[9].time > timer) {
